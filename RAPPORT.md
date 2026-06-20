@@ -52,12 +52,15 @@ Schéma :
 ## Git
 
 Branches :
-- `main` : version stable
-- `develop` : intégration
-- `feature/...` : pour les grosses features
+- `main` : version stable, taggée `v1.0.0`
+- `develop` : intégration courante
+- `feat/docker` : branche feature qu'on a ouverte pour la partie docker
 
-On a utilisé des merges `--no-ff` pour garder l'historique lisible, et
-quelques fix directement sur develop quand c'était petit.
+La plupart des commits ont été faits direct sur develop (c'est notre
+branche de travail). On a juste isolé la partie docker sur une feature
+branch parce qu'on voulait tester sans casser develop.
+
+Une fois tout vert sur develop, on a mergé dans main et tagué `v1.0.0`.
 
 ## CI
 
