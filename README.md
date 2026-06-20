@@ -1,55 +1,41 @@
-# Projet DevOps EFREI S8
+# myFSS Devops
 
-Application de suivi des apprentis EFREI, structurée selon les principes DevOps.
+Projet DevOps EFREI S8 — binôme Faria / Sylla.
 
-## Architecture
+App de suivi des apprentis EFREI, refactorée en monorepo avec 2 services
+back, Postgres, Docker, CI et tests.
 
-Monorepo composé de deux services backend dockerisés :
+## Services
 
-- **`apprenti-service`** — Application principale (Spring Boot + Thymeleaf + JPA / PostgreSQL).
-  Gère les apprentis, entreprises, missions, visites et évaluations.
-  Architecture en couches : **Data (repository)** → **Services** → **Controller (web)**.
-- **`stats-service`** — Microservice REST qui calcule des statistiques sur les apprentis.
-  Consommé en HTTP par `apprenti-service`.
-
-Une base **PostgreSQL** est lancée par `docker-compose` pour la persistance.
+- `apprenti-service` (port 8080) : l'app principale, Spring Boot +
+  Thymeleaf + JPA/Postgres
+- `stats-service` (port 8081) : microservice REST qui calcule des stats
+  sur les apprentis
 
 ```
-┌─────────────────┐    HTTP     ┌─────────────────┐
-│ apprenti-service│ ──────────► │  stats-service  │
-└────────┬────────┘             └─────────────────┘
-         │ JPA
-         ▼
-   ┌───────────┐
-   │ Postgres  │
-   └───────────┘
+[ browser ] --> [ apprenti-service ] --> [ stats-service ]
+                       |
+                       v
+                  [ postgres ]
 ```
 
-## Lancer le projet
+## Lancer
 
-```bash
+```
 docker compose up --build
 ```
 
-- UI apprenti : http://localhost:8080
-- API stats   : http://localhost:8081/api/stats/...
+- App : http://localhost:8080 (login `sa` / `password`)
+- Stats : http://localhost:8081/api/stats/health
 
-## Tests & qualité
+## Tests
 
-```bash
-# tous les services
+```
 mvn -f apprenti-service/pom.xml verify
-mvn -f stats-service/pom.xml   verify
+mvn -f stats-service/pom.xml verify
 ```
 
-Rapports générés :
-- Couverture : `*/target/site/jacoco/index.html`
-- SpotBugs   : `*/target/spotbugs.html`
+Reports JaCoCo dans `*/target/site/jacoco/index.html`,
+SpotBugs dans `*/target/spotbugs.html`.
 
-## Workflow Git
-
-- `main`     : version stable / livrable
-- `develop`  : intégration
-- `feature/*` : développement, mergées dans `develop` via PR
-
-Voir [`RAPPORT.md`](./RAPPORT.md) pour le rapport complet.
+Voir [RAPPORT.md](./RAPPORT.md) pour les détails.
