@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion | My Follow-up Student System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Connexion à MyFSS - My Follow-up Student System</h2>
+    <form method="post" th:action="@{/login}">
+        <label for="username">Identifiant :</label>
+        <input id="username" name="username" required type="text">
+
+        <label for="password">Mot de passe :</label>
+        <input id="password" name="password" required type="password">
+
+        <button type="submit">Se connecter</button>
+
+        <div class="error" th:if="${param.error}">Identifiants incorrects</div>
+        <div class="success" th:if="${param.logout}">Déconnexion réussie</div>
+    </form>
+</div>
+
+</body>
+</html>

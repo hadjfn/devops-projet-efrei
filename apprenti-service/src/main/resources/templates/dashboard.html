@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau de bord | MyFSS - My Follow-up Student System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<header>
+    <div class="welcome-msg">
+        Bonjour <span th:text="${username}"></span>
+    </div>
+    <form class="logout-form" method="post" th:action="@{/logout}">
+        <button class="logout-btn" title="Déconnexion" type="submit">
+            <svg fill="none" height="32" stroke="#00baff" stroke-linecap="round" stroke-linejoin="round"
+                 stroke-width="2" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" x2="9" y1="12" y2="12"/>
+                <animate attributeName="stroke" dur="1.5s" repeatCount="indefinite" values="#00baff;#00ffff;#00baff"/>
+            </svg>
+        </button>
+    </form>
+</header>
+<div>
+    <form class="newYear-form" method="post" th:action="@{/apprentis/newYear}">
+
+        <button class="add-btn" title="New Year" type="submit">
+            Nouvelle Année
+        </button>
+    </form>
+</div>
+
+<div class="dashboard-container">
+    <h2>Liste des apprentis</h2>
+
+    <div class="error" th:if="${#lists.isEmpty(apprentis)}">
+        Vous n'avez pas d'apprentis !
+    </div>
+
+    <div class="table-wrapper" th:if="${!#lists.isEmpty(apprentis)}">
+        <table>
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Programme</th>
+                <th>Année</th>
+                <th>Détails</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${apprentis}">
+                <td th:text="${a.nom}"></td>
+                <td th:text="${a.prenom}"></td>
+                <td th:text="${a.programme}"></td>
+                <td th:text="${a.annee}"></td>
+                <td><a th:href="@{'/apprentis/' + ${a.id}}">Voir</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a class="add-btn" th:href="@{/apprentis/new}">+ Ajouter un apprenti</a>
+</div>
+
+</body>
+</html>

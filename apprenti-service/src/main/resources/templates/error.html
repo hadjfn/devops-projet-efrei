@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Erreur | My Follow-up Student System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/error.css}">
+</head>
+<body>
+<h2>Oups !</h2>
+<p th:text="${errorMessage}">Une erreur est survenue.</p>
+<a th:href="@{/dashboard}">Retour au tableau de bord</a>
+</body>
+</html>

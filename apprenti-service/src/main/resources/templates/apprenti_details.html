@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Détails de l'apprenti | MyFSS - My Follow-up Student System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/details.css}">
+</head>
+    <body>
+        <h2>Détails de <span th:text="${apprenti.nom} + ' ' + ${apprenti.prenom}"></span></h2>
+
+        <p>Email : <span th:text="${apprenti.email}"></span></p>
+        <p>Téléphone : <span th:text="${apprenti.telephone}"></span></p>
+        <p>Programme : <span th:text="${apprenti.programme}"></span></p>
+        <p>Majeure : <span th:text="${apprenti.majeure}"></span></p>
+        <p>Année : <span th:text="${apprenti.annee}"></span></p>
+
+        <a th:href="@{'/apprentis/edit/' + ${apprenti.id}}">Modifier</a>
+        <a onclick="return confirm('Supprimer cet apprenti ?');"
+           th:href="@{'/apprentis/delete/' + ${apprenti.id}}">Supprimer</a>
+        <a class="back-btn" th:href="@{/dashboard}">Retour</a>
+    </body>
+</html>

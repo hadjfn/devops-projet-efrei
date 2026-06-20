@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un apprenti | MyFSS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/form.css}">
+</head>
+<body>
+<h2>Ajouter un apprenti</h2>
+<form method="post" th:action="@{/apprentis/save}" th:object="${apprenti}">
+    <input th:field="*{id}" type="hidden"/>
+    <label>Nom
+        <input th:field="*{nom}" type="text">
+    </label>
+    <label>Prénom
+        <input th:field="*{prenom}" type="text">
+    </label>
+    <label>Email
+        <input th:field="*{email}" type="email">
+    </label>
+    <label>Téléphone
+        <input th:field="*{telephone}" type="text">
+    </label>
+    <label>Programme
+        <input th:field="*{programme}" type="text">
+    </label>
+    <label>Majeure
+        <input th:field="*{majeure}" type="text">
+    </label>
+    <label>Année
+        <input th:field="*{annee}" type="number">
+    </label>
+    <button type="submit">Enregistrer</button>
+</form>
+<a class="back-btn" th:href="@{/dashboard}">Retour</a>
+</body>
+</html>

@@ -1,0 +1,183 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+    background-color: #0a0f1a;
+    color: #e0e8ff;
+    min-height: 100vh;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1, h2 {
+    color: #00b7ff;
+    text-shadow: 0 0 10px #0077ff, 0 0 20px #001133;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* === TABLEAUX === */
+table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 0 20px rgba(0, 150, 255, 0.2);
+    background: rgba(10, 20, 40, 0.7);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 100, 255, 0.3);
+}
+
+th {
+    color: #00baff;
+    text-transform: uppercase;
+}
+
+tr:hover {
+    background: rgba(0, 100, 255, 0.15);
+    transition: 0.3s;
+}
+
+/* === LIENS / BOUTONS === */
+a, button {
+    color: #00baff;
+    text-decoration: none;
+    font-weight: bold;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+a:hover, button:hover {
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+}
+
+/* === HEADER === */
+header {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    background: rgba(10, 20, 40, 0.8);
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 100, 255, 0.3);
+}
+
+header form button {
+    background: transparent;
+    border: 1px solid #007bff;
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+header form button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* === FORMULAIRES === */
+form {
+    background: rgba(15, 20, 35, 0.85);
+    border-radius: 12px;
+    padding: 25px;
+    width: 400px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+label {
+    margin: 8px 0 3px 0;
+    font-size: 0.9rem;
+}
+
+input, select {
+    padding: 8px 10px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 100, 255, 0.4);
+    background-color: #0d1526;
+    color: #e0e8ff;
+    outline: none;
+}
+
+input:focus {
+    border-color: #00b7ff;
+    box-shadow: 0 0 8px #008cff;
+}
+
+/* === BOUTON PRINCIPAL === */
+button[type="submit"] {
+    background: linear-gradient(90deg, #003366, #0066cc);
+    border: none;
+    border-radius: 8px;
+    color: #e0e8ff;
+    font-weight: bold;
+    padding: 10px;
+    margin-top: 10px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px rgba(0, 150, 255, 0.4);
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(90deg, #0055aa, #00aaff);
+    box-shadow: 0 0 20px rgba(0, 200, 255, 0.6);
+}
+
+/* === BOUTON RETOUR === */
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #00baff;
+    font-weight: bold;
+    margin-top: 20px;
+    text-decoration: none;
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+.back-btn:hover {
+    transform: translateX(-5px);
+    text-shadow: 0 0 10px #00baff, 0 0 20px #008cff;
+}
+
+.back-btn::before {
+    content: '←';
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.back-btn:hover::before {
+    transform: translateX(-3px);
+}
+
+/* === ÉTATS === */
+.error {
+    color: #ff4444;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.success {
+    color: #00ff99;
+    text-align: center;
+    margin-top: 10px;
+}

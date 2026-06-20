@@ -1,0 +1,9 @@
+.error-page {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.error-page p {
+    margin: 20px 0;
+    color: #ff7777;
+}

@@ -1,0 +1,101 @@
+form {
+    max-width: 450px;
+}
+
+form button {
+    align-self: center;
+}
+
+form label {
+    font-weight: bold;
+}
+
+/* === FORMULAIRE AJOUT APPRENTI === */
+form {
+    background: rgba(15, 20, 35, 0.85);
+    border-radius: 12px;
+    padding: 30px 25px;
+    width: 400px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* espace entre les champs */
+}
+
+form label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    color: #00baff;
+    font-size: 0.95rem;
+}
+
+form input {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 100, 255, 0.4);
+    background-color: #0d1526;
+    color: #e0e8ff;
+    outline: none;
+    margin-top: 4px;
+}
+
+form input:focus {
+    border-color: #00b7ff;
+    box-shadow: 0 0 8px #008cff;
+}
+
+/* BOUTON ENREGISTRER */
+form button[type="submit"] {
+    background: linear-gradient(90deg, #003366, #0066cc);
+    border: none;
+    border-radius: 8px;
+    color: #e0e8ff;
+    font-weight: bold;
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px rgba(0, 150, 255, 0.4);
+}
+
+form button[type="submit"]:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(90deg, #0055aa, #00aaff);
+    box-shadow: 0 0 20px rgba(0, 200, 255, 0.6);
+}
+
+/* BOUTON RETOUR */
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #00baff;
+    font-weight: bold;
+    margin-top: 20px;
+    text-decoration: none;
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+.back-btn:hover {
+    transform: translateX(-5px);
+    text-shadow: 0 0 10px #00baff, 0 0 20px #008cff;
+}
+
+.back-btn::before {
+    content: '←';
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.back-btn:hover::before {
+    transform: translateX(-3px);
+}
+
+/* TITRE DE LA PAGE */
+h2 {
+    color: #00b7ff;
+    text-shadow: 0 0 10px #0077ff, 0 0 20px #001133;
+    text-align: center;
+    margin-bottom: 25px;
+}

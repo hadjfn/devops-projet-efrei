@@ -1,0 +1,87 @@
+/* === CONNEXION === */
+.login-container {
+    width: 90%;
+    background: rgba(15, 20, 35, 0.85);
+    box-shadow: 0 0 25px rgba(0, 150, 255, 0.3);
+    border-radius: 12px;
+    padding: 40px 30px;
+    margin: auto;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.login-container:hover {
+    transform: translate(-50%, -53%);
+    box-shadow: 0 0 40px rgba(0, 200, 255, 0.4);
+}
+
+.login-container h2 {
+    color: #00baff;
+    margin-bottom: 25px;
+    text-shadow: 0 0 12px #0077ff, 0 0 20px #001133;
+}
+
+/* Champs du formulaire */
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+}
+
+.login-container label {
+    text-align: left;
+    font-weight: bold;
+    color: #a8cfff;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 100, 255, 0.4);
+    background-color: #0d1526;
+    color: #e0e8ff;
+    outline: none;
+}
+
+.login-container input:focus {
+    border-color: #00b7ff;
+    box-shadow: 0 0 8px #008cff;
+}
+
+/* Bouton */
+.login-container button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: linear-gradient(90deg, #003366, #0066cc);
+    border: none;
+    border-radius: 8px;
+    color: #e0e8ff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px rgba(0, 150, 255, 0.4);
+}
+
+.login-container button:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(90deg, #0055aa, #00aaff);
+    box-shadow: 0 0 20px rgba(0, 200, 255, 0.6);
+}
+
+/* Messages */
+.error {
+    color: #ff4444;
+    margin-top: 10px;
+}
+
+.success {
+    color: #00ff99;
+    margin-top: 10px;
+}
