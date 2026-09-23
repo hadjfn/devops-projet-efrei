@@ -2,7 +2,7 @@ package faria.sasikumar.sylla.myfss.controller;
 
 import faria.sasikumar.sylla.myfss.config.SecurityConfig;
 import faria.sasikumar.sylla.myfss.model.Apprenti;
-import faria.sasikumar.sylla.myfss.repository.*;
+import faria.sasikumar.sylla.myfss.exception.NotFoundException;
 import faria.sasikumar.sylla.myfss.service.ApprentiService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +30,6 @@ class ApprentiControllerTest {
     private MockMvc mockMvc;
 
     @MockBean private ApprentiService apprentiService;
-    @MockBean private EntrepriseRepository entrepriseRepo;
-    @MockBean private EvaluationRepository evaluationRepo;
-    @MockBean private MaitreApprentissageRepository maitreRepo;
-    @MockBean private MissionRepository missionRepo;
-    @MockBean private VisiteRepository visiteRepo;
 
     @Test
     @WithMockUser
@@ -51,11 +46,6 @@ class ApprentiControllerTest {
         Apprenti a = new Apprenti("Doe", "Alice", "a@e.fr", "0102030405", "BSc", "DA", 1);
         a.setId(1L);
         when(apprentiService.getApprenti(1L)).thenReturn(a);
-        when(evaluationRepo.findAll()).thenReturn(List.of());
-        when(missionRepo.findAll()).thenReturn(List.of());
-        when(visiteRepo.findAll()).thenReturn(List.of());
-        when(maitreRepo.findAll()).thenReturn(List.of());
-        when(entrepriseRepo.findAll()).thenReturn(List.of());
 
         mockMvc.perform(get("/apprentis/1"))
                .andExpect(status().isOk())
@@ -103,11 +93,44 @@ class ApprentiControllerTest {
     @Test
     @WithMockUser
     void deleteApprenti_redirectsToDashboard() throws Exception {
-        mockMvc.perform(get("/apprentis/delete/1"))
+        mockMvc.perform(post("/apprentis/delete/1").with(csrf()))
                .andExpect(status().is3xxRedirection())
                .andExpect(redirectedUrl("/apprentis/dashboard"));
 
         verify(apprentiService).deleteApprenti(1L);
+    }
+
+    @Test
+    @WithMockUser
+    void missingApprentice_returns404() throws Exception {
+        when(apprentiService.getApprenti(99L)).thenThrow(new NotFoundException("Apprenti non trouvé"));
+        mockMvc.perform(get("/apprentis/99"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("error"));
+    }
+
+    @Test
+    @WithMockUser
+    void malformedIdentifier_returns400() throws Exception {
+        mockMvc.perform(get("/apprentis/not-a-number"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser
+    void unexpectedFailure_doesNotExposeInternalMessage() throws Exception {
+        when(apprentiService.getApprenti(1L)).thenThrow(new IllegalStateException("private database connection details"));
+        mockMvc.perform(get("/apprentis/1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(model().attribute("errorMessage", "Une erreur est survenue. Veuillez réessayer plus tard."));
+    }
+
+    @Test
+    @WithMockUser
+    void delete_requiresPostAndCsrf() throws Exception {
+        mockMvc.perform(get("/apprentis/delete/1")).andExpect(status().isMethodNotAllowed());
+        mockMvc.perform(post("/apprentis/delete/1")).andExpect(status().isForbidden());
+        org.mockito.Mockito.verifyNoInteractions(apprentiService);
     }
 
     @Test

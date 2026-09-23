@@ -2,39 +2,26 @@ package faria.sasikumar.sylla.myfss.controller;
 
 import faria.sasikumar.sylla.myfss.model.Apprenti;
 import faria.sasikumar.sylla.myfss.service.ApprentiService;
-import faria.sasikumar.sylla.myfss.repository.*;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import jakarta.validation.Valid;
 
-
-@Slf4j
 @Controller
 @RequestMapping("/apprentis")
 public class ApprentiController {
 
     private final ApprentiService apprentiService;
-    private final EntrepriseRepository entrepriseRepo;
-    private final EvaluationRepository evaluationRepo;
-    private final MaitreApprentissageRepository maitreRepo;
-    private final MissionRepository missionRepo;
-    private final VisiteRepository visiteRepo;
 
-    public ApprentiController(ApprentiService apprentiService,
-                              EntrepriseRepository entrepriseRepo,
-                              EvaluationRepository evaluationRepo,
-                              MaitreApprentissageRepository maitreRepo,
-                              MissionRepository missionRepo,
-                              VisiteRepository visiteRepo) {
+    public ApprentiController(ApprentiService apprentiService) {
         this.apprentiService = apprentiService;
-        this.entrepriseRepo = entrepriseRepo;
-        this.evaluationRepo = evaluationRepo;
-        this.maitreRepo = maitreRepo;
-        this.missionRepo = missionRepo;
-        this.visiteRepo = visiteRepo;
+    }
+
+    @InitBinder("apprenti")
+    void bindEditableFields(WebDataBinder binder) {
+        binder.setAllowedFields("id", "nom", "prenom", "email", "telephone", "programme", "majeure", "annee");
     }
 
     @GetMapping("/new")
@@ -52,7 +39,6 @@ public class ApprentiController {
 
     @PostMapping("/save")
     public String saveApprenti(@Valid @ModelAttribute Apprenti apprenti, BindingResult result) {
-        log.info("error : " + result);
         if (result.hasErrors()) {
             return "apprenti_form";
         }
@@ -61,15 +47,14 @@ public class ApprentiController {
     }
 
     @PostMapping("/newYear")
-    public String newYear(){
-
+    public String newYear() {
         apprentiService.newAcademiqueYear();
 
         return "redirect:/apprentis/dashboard";
     }
 
     @PostMapping("/archive/{id}")
-    public String archive(@PathVariable Long id ){
+    public String archive(@PathVariable Long id) {
         apprentiService.archive(id);
         return "redirect:/apprentis/dashboard";
     }
@@ -78,17 +63,11 @@ public class ApprentiController {
     public String apprentiDetails(@PathVariable Long id, Model model) {
         Apprenti apprenti = apprentiService.getApprenti(id);
         model.addAttribute("apprenti", apprenti);
-        model.addAttribute("evaluations", evaluationRepo.findAll());
-        model.addAttribute("missions", missionRepo.findAll());
-        model.addAttribute("visites", visiteRepo.findAll());
-        model.addAttribute("maitres", maitreRepo.findAll());
-        model.addAttribute("entreprises", entrepriseRepo.findAll());
         return "apprenti_details";
     }
 
 
-
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteApprenti(@PathVariable Long id) {
         apprentiService.deleteApprenti(id);
         return "redirect:/apprentis/dashboard";

@@ -16,8 +16,10 @@
         <p>Année : <span th:text="${apprenti.annee}"></span></p>
 
         <a th:href="@{'/apprentis/edit/' + ${apprenti.id}}">Modifier</a>
-        <a onclick="return confirm('Supprimer cet apprenti ?');"
-           th:href="@{'/apprentis/delete/' + ${apprenti.id}}">Supprimer</a>
+        <form method="post" th:action="@{'/apprentis/delete/' + ${apprenti.id}}"
+              onsubmit="return confirm('Supprimer cet apprenti ?');">
+            <button type="submit">Supprimer</button>
+        </form>
         <a class="back-btn" th:href="@{/dashboard}">Retour</a>
     </body>
 </html>
