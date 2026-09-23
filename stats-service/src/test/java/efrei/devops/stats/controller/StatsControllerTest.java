@@ -62,4 +62,19 @@ class StatsControllerTest {
                .andExpect(jsonPath("$.countByProgramme.BSc").value(2))
                .andExpect(jsonPath("$.averageYear").value(1.5));
     }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings = {"[null]", "[{\"annee\":null}]", "null", "{}"})
+    void invalidPayload_returns400WithoutCallingCalculation(String body) throws Exception {
+        mockMvc.perform(post("/api/stats/summary").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isBadRequest());
+        org.mockito.Mockito.verifyNoInteractions(statsService);
+    }
+
+    @Test
+    void emptyDataset_isValid() throws Exception {
+        when(statsService.computeSummary(List.of())).thenReturn(new StatsSummary(0, 0, 0, Map.of(), Map.of(), 0.0));
+        mockMvc.perform(post("/api/stats/summary").contentType(MediaType.APPLICATION_JSON).content("[]"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.total").value(0));
+    }
 }

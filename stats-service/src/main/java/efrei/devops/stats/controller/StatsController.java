@@ -4,6 +4,7 @@ import efrei.devops.stats.data.ApprentiDto;
 import efrei.devops.stats.data.StatsSummary;
 import efrei.devops.stats.service.StatsService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class StatsController {
     }
 
     @PostMapping("/summary")
-    public ResponseEntity<StatsSummary> summary(@RequestBody @Valid List<ApprentiDto> apprentis) {
+    public ResponseEntity<StatsSummary> summary(@RequestBody @NotNull List<@NotNull @Valid ApprentiDto> apprentis) {
         return ResponseEntity.ok(statsService.computeSummary(apprentis));
     }
 }
