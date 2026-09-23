@@ -6,5 +6,6 @@ import java.util.List;
 
 @Repository
 public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
+    List<Apprenti> findByArchivedFalse();
     List<Apprenti> findByNomContainingIgnoreCase(String nom);
 }

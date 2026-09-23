@@ -1,6 +1,7 @@
 package faria.sasikumar.sylla.myfss.service;
 
 import faria.sasikumar.sylla.myfss.model.Apprenti;
+import faria.sasikumar.sylla.myfss.exception.NotFoundException;
 import faria.sasikumar.sylla.myfss.repository.ApprentiRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ class ApprentiServiceTest {
 
     @Test
     void getAllApprentisNoArchived_filtersOutArchived() {
-        when(repository.findAll()).thenReturn(List.of(alice, bob, archivedCarol));
+        when(repository.findByArchivedFalse()).thenReturn(List.of(alice, bob));
 
         List<Apprenti> result = service.getAllApprentisNoArchived();
 
@@ -77,12 +78,13 @@ class ApprentiServiceTest {
         when(repository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.getApprenti(99L))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("non trouvé");
     }
 
     @Test
     void createOrUpdateApprenti_delegatesToRepository() {
+        when(repository.findById(1L)).thenReturn(Optional.of(alice));
         when(repository.save(alice)).thenReturn(alice);
 
         Apprenti saved = service.createOrUpdateApprenti(alice);
@@ -93,9 +95,10 @@ class ApprentiServiceTest {
 
     @Test
     void deleteApprenti_callsRepository() {
+        when(repository.findById(1L)).thenReturn(Optional.of(alice));
         service.deleteApprenti(1L);
 
-        verify(repository).deleteById(1L);
+        verify(repository).delete(alice);
     }
 
     @Test
