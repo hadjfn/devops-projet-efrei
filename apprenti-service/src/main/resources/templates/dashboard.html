@@ -35,6 +35,8 @@
 
 <div class="dashboard-container">
 
+    <p role="status" th:if="${!statsAvailable}">Statistiques temporairement indisponibles. La liste des apprentis reste accessible.</p>
+
     <section class="stats-panel" th:if="${stats != null}">
         <h2>Statistiques (via stats-service)</h2>
         <ul>

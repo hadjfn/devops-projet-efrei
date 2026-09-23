@@ -9,8 +9,9 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
 import java.util.List;
+import java.util.Optional;
 
-// client vers stats-service, fallback vide si KO
+// An unavailable summary is distinct from a valid, empty dataset.
 @Slf4j
 @Component
 public class StatsClient {
@@ -22,7 +23,7 @@ public class StatsClient {
         this.restClient = builder.baseUrl(baseUrl).build();
     }
 
-    public StatsSummary fetchSummary(List<Apprenti> apprentis) {
+    public Optional<StatsSummary> fetchSummary(List<Apprenti> apprentis) {
         List<ApprentiDto> payload = apprentis.stream().map(ApprentiDto::from).toList();
         try {
             StatsSummary result = restClient.post()
@@ -31,10 +32,10 @@ public class StatsClient {
                     .body(payload)
                     .retrieve()
                     .body(StatsSummary.class);
-            return result != null ? result : StatsSummary.empty();
+            return Optional.ofNullable(result);
         } catch (RestClientException ex) {
-            log.warn("stats-service indisponible ({}), fallback vide", ex.getMessage());
-            return StatsSummary.empty();
+            log.warn("stats-service indisponible ({})", ex.getClass().getSimpleName());
+            return Optional.empty();
         }
     }
 }

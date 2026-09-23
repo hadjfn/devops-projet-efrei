@@ -1,38 +1,27 @@
 package faria.sasikumar.sylla.myfss.controller;
 
-import faria.sasikumar.sylla.myfss.client.StatsClient;
-import faria.sasikumar.sylla.myfss.client.StatsSummary;
-import faria.sasikumar.sylla.myfss.model.Apprenti;
-import faria.sasikumar.sylla.myfss.service.ApprentiService;
+import faria.sasikumar.sylla.myfss.service.DashboardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.security.Principal;
-import java.util.List;
 
 @Controller
 public class DashboardController {
+    private final DashboardService dashboardService;
 
-    private final ApprentiService apprentiService;
-    private final StatsClient statsClient;
-
-    public DashboardController(ApprentiService apprentiService, StatsClient statsClient) {
-        this.apprentiService = apprentiService;
-        this.statsClient = statsClient;
+    public DashboardController(DashboardService dashboardService) {
+        this.dashboardService = dashboardService;
     }
 
-    @GetMapping({"/", "/dashboard"})
+    @GetMapping({"/", "/dashboard", "/apprentis/dashboard"})
     public String dashboard(Model model, Principal principal) {
-        List<Apprenti> apprentis = apprentiService.getAllApprentisNoArchived();
-        StatsSummary stats = statsClient.fetchSummary(apprentiService.getAllApprentis());
-
-        model.addAttribute("apprentis", apprentis);
-        model.addAttribute("stats", stats);
-
-        String username = (principal != null) ? principal.getName() : "Invité";
-        model.addAttribute("username", username);
-
+        DashboardService.Dashboard dashboard = dashboardService.load();
+        model.addAttribute("apprentis", dashboard.apprentis());
+        dashboard.stats().ifPresent(stats -> model.addAttribute("stats", stats));
+        model.addAttribute("statsAvailable", dashboard.stats().isPresent());
+        model.addAttribute("username", principal != null ? principal.getName() : "Invité");
         return "dashboard";
     }
 }

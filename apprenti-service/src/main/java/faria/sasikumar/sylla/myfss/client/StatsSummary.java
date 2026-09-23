@@ -10,6 +10,11 @@ public record StatsSummary(
         Map<String, Long> countByProgramme,
         double averageYear
 ) {
+    public StatsSummary {
+        countByYear = Map.copyOf(countByYear);
+        countByProgramme = Map.copyOf(countByProgramme);
+    }
+
     public static StatsSummary empty() {
         return new StatsSummary(0, 0, 0, Map.of(), Map.of(), 0.0);
     }

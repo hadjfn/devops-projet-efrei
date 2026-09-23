@@ -8,6 +8,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestClient;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
+import java.net.http.HttpClient;
+import java.time.Duration;
+import java.util.Optional;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +29,10 @@ class StatsClientTest {
     void setUp() throws IOException {
         server = new MockWebServer();
         server.start();
-        client = new StatsClient(RestClient.builder(), server.url("/").toString());
+        JdkClientHttpRequestFactory factory = new JdkClientHttpRequestFactory(HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMillis(500)).build());
+        factory.setReadTimeout(Duration.ofSeconds(2));
+        client = new StatsClient(RestClient.builder().requestFactory(factory), server.url("/").toString());
     }
 
     @AfterEach
@@ -56,11 +63,12 @@ class StatsClientTest {
                     }
                     """));
 
-        StatsSummary result = client.fetchSummary(List.of(
+        Optional<StatsSummary> response = client.fetchSummary(List.of(
                 buildApprenti(1L, "Alice", 1, false),
                 buildApprenti(2L, "Bob", 3, true)
         ));
 
+        StatsSummary result = response.orElseThrow();
         assertThat(result.total()).isEqualTo(2);
         assertThat(result.active()).isEqualTo(1);
         assertThat(result.archived()).isEqualTo(1);
@@ -77,13 +85,32 @@ class StatsClientTest {
     void fetchSummary_returnsEmptyWhenServerErrors() {
         server.enqueue(new MockResponse().setResponseCode(500));
 
-        StatsSummary result = client.fetchSummary(List.of(
+        Optional<StatsSummary> response = client.fetchSummary(List.of(
                 buildApprenti(1L, "Alice", 1, false)
         ));
 
-        assertThat(result.total()).isZero();
-        assertThat(result.active()).isZero();
-        assertThat(result.archived()).isZero();
+        assertThat(response).isEmpty();
+    }
+
+    @Test
+    void fetchSummary_returnsUnavailableForEmptyOrMalformedResponses() {
+        server.enqueue(new MockResponse().setResponseCode(204));
+        server.enqueue(new MockResponse().setHeader("Content-Type", "application/json").setBody("invalid json"));
+        server.enqueue(new MockResponse().setHeader("Content-Type", "application/json").setBody("{}"));
+        assertThat(client.fetchSummary(List.of())).isEmpty();
+        assertThat(client.fetchSummary(List.of())).isEmpty();
+        assertThat(client.fetchSummary(List.of())).isEmpty();
+    }
+
+    @Test
+    void fetchSummary_readTimeoutDoesNotBlockDashboardIndefinitely() {
+        JdkClientHttpRequestFactory factory = new JdkClientHttpRequestFactory();
+        factory.setReadTimeout(Duration.ofMillis(500));
+        client = new StatsClient(RestClient.builder().requestFactory(factory), server.url("/").toString());
+        server.enqueue(new MockResponse().setHeadersDelay(5, TimeUnit.SECONDS)
+                .setHeader("Content-Type", "application/json").setBody("{}"));
+        org.junit.jupiter.api.Assertions.assertTimeoutPreemptively(Duration.ofSeconds(3),
+                () -> assertThat(client.fetchSummary(List.of())).isEmpty());
     }
 
     @Test
@@ -91,10 +118,10 @@ class StatsClientTest {
         // shutdown intentional : provoque une erreur de connexion
         server.shutdown();
 
-        StatsSummary result = client.fetchSummary(List.of(
+        Optional<StatsSummary> response = client.fetchSummary(List.of(
                 buildApprenti(1L, "Alice", 1, false)
         ));
 
-        assertThat(result.total()).isZero();
+        assertThat(response).isEmpty();
     }
 }

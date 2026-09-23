@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
 
-import java.security.Principal;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -37,14 +35,6 @@ public class ApprentiController {
         this.maitreRepo = maitreRepo;
         this.missionRepo = missionRepo;
         this.visiteRepo = visiteRepo;
-    }
-
-    @GetMapping("/dashboard")
-    public String dashboard(Model model, Principal principal) {
-        List<Apprenti> apprentis = apprentiService.getAllApprentisNoArchived();
-        model.addAttribute("apprentis", apprentis);
-        model.addAttribute("username", (principal != null) ? principal.getName() : "Invité");
-        return "dashboard";
     }
 
     @GetMapping("/new")
